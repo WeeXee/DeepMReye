@@ -14,6 +14,8 @@ setup(
     name='deepmreye',
     version='0.1',
     install_requires=requirements,
+    use_scm_version=True,
+    setup_requires=['setuptools_scm'],
     author='Markus Frey',
     author_email='markus.frey1@gmail.com',
     description="MR-based eye tracker without eye tracking",
@@ -30,5 +32,6 @@ setup(
     packages=find_packages(),
     package_data={
         "": ["*.p", "*.nii", "*.csv", "*.npz", "*.png", "*.txt"],
+        "deepmreye": ["deepmreye/masks/*", "tests/data/*"]
     },
 )

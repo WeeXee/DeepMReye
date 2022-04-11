@@ -7,6 +7,7 @@ from mpl_toolkits.axes_grid1.axes_divider import make_axes_locatable
 from scipy.io import loadmat
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
+from deepmreye.util.data_io import download_mask
 
 # --------------------------------------------------------------------------------
 # --------------------------ANTS TRANSFORMS---------------------------------------
@@ -92,7 +93,7 @@ def run_participant(fp_func, dme_template, eyemask_big, eyemask_small, x_edges, 
 # --------------------------------------------------------------------------------
 # --------------------------MASKING-----------------------------------------------
 # --------------------------------------------------------------------------------
-def get_masks(data_path='../deepmreye/masks/'):
+def get_masks(data_path=''):
     """Loads masks for whole brain, big eye mask and small eye mask
 
     Parameters
@@ -117,9 +118,20 @@ def get_masks(data_path='../deepmreye/masks/'):
     z_edges : list
         Edges of mask in z-dimension
     """     
-    eyemask_small = ants.image_read(data_path + 'eyemask_small.nii')
-    eyemask_big = ants.image_read(data_path + 'eyemask_big.nii')
-    dme_template = ants.image_read(data_path + 'dme_template.nii')
+    def load_from_path(fn_mask):
+        if os.path.exists(fn_mask):
+            return ants.image_read(fn_mask)
+        else:
+            print('Downloading mask: {}'.format(fn_mask))
+            download_mask(fn_mask)
+            return ants.image_read(fn_mask)
+
+    if data_path == "":
+        data_path = os.path.abspath(os.path.join(__file__, "..", "masks"))
+
+    eyemask_small = load_from_path(os.path.join(data_path, 'eyemask_small.nii'))
+    eyemask_big = load_from_path(os.path.join(data_path,  'eyemask_big.nii'))
+    dme_template = load_from_path(os.path.join(data_path, 'dme_template.nii'))
     (mask, x_edges, y_edges, z_edges) = get_mask_edges(mask=eyemask_small)
     return eyemask_small, eyemask_big, dme_template, mask, x_edges, y_edges, z_edges
 
