@@ -12,9 +12,8 @@ with open('requirements.txt') as f:
 
 setup(
     name='deepmreye',
-    version='0.1',
+    version='0.1.0',
     install_requires=requirements,
-    use_scm_version=True,
     setup_requires=['setuptools_scm'],
     author='Markus Frey',
     author_email='markus.frey1@gmail.com',
